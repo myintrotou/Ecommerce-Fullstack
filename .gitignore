@@ -1,0 +1,23 @@
+# Visual Studio
+.vs/
+[Bb]in/
+[Oo]bj/
+*.user
+*.userosscache
+*.sln.docstates
+
+# Node.js
+Client/node_modules/
+Client/dist/
+Client/.angular/
+
+# Environment files
+.env
+appsettings.Development.json
+
+# Tooling
+.vscode/
+
+# Database
+*.mdf
+*.ldf
