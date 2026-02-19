@@ -33,7 +33,7 @@ A full-stack e-commerce application built with **ASP.NET Core Web API** and **An
 3. Run `ng serve` and open `http://localhost:4200`.
 
 ## 📸 Screenshots
-*(Add your screenshots here after uploading!)*
+![alt text](image.png)
 
 ## 📄 License
 This project is licensed under the MIT License.
