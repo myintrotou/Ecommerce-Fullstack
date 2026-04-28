@@ -83,7 +83,7 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<AppDbContext>();
-    context.Database.Migrate(); // This creates the tables automatically on the server
+    context.Database.EnsureCreated(); // More reliable for SQLite in Docker environments
     DbSeeder.Seed(context);
 }
 

@@ -15,10 +15,6 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app/out .
 
-# Create an empty SQLite database file if it doesn't exist
-# and ensure the app has permission to write to it.
-RUN touch ecommerce.db
-
 # Expose the port the app will run on
 EXPOSE 8080
 ENV ASPNETCORE_URLS=http://+:8080
