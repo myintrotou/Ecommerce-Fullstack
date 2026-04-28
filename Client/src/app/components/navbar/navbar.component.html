@@ -1,0 +1,24 @@
+<nav class="navbar">
+    <div class="nav-container">
+        <a routerLink="/" class="logo">E-Shop <span class="dot">.</span></a>
+        
+        <div class="nav-links">
+            <a routerLink="/products" routerLinkActive="active">Products</a>
+            
+            <ng-container *ngIf="!authService.isLoggedIn()">
+                <a routerLink="/login" class="nav-btn">Login</a>
+                <a routerLink="/register" class="nav-btn primary">Register</a>
+            </ng-container>
+
+            <ng-container *ngIf="authService.isLoggedIn()">
+                <a routerLink="/cart" class="cart-link">
+                    <span class="cart-icon">🛒</span>
+                    <span class="badge" *ngIf="cartService.getCartCount() > 0">
+                        {{ cartService.getCartCount() }}
+                    </span>
+                </a>
+                <button (click)="logout()" class="nav-btn">Logout</button>
+            </ng-container>
+        </div>
+    </div>
+</nav>

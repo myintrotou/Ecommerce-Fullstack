@@ -1,0 +1,22 @@
+<div class="container">
+    <header class="list-header">
+        <h1>Discover Premium Products</h1>
+        <p class="subtitle">Curated selection for your modern lifestyle</p>
+    </header>
+
+    <div class="product-grid">
+        <div class="product-card glass-card" *ngFor="let product of products">
+            <div class="image-container">
+                <img [src]="product.imageUrl || 'https://via.placeholder.com/300'" [alt]="product.name">
+            </div>
+            <div class="product-info">
+                <h3>{{ product.name }}</h3>
+                <p class="description">{{ product.description }}</p>
+                <div class="footer">
+                    <span class="price">${{ product.price }}</span>
+                    <button class="btn-primary" (click)="addToCart(product)">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

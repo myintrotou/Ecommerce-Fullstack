@@ -1,0 +1,62 @@
+/* Inherit most styles from login or shared auth CSS if I had one, 
+   but for simplicity I'll duplicate the base layout styles here or assume global handles some */
+.auth-container {
+    height: calc(100vh - 80px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at top left, rgba(16, 185, 129, 0.1), transparent);
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 400px;
+}
+
+h2 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.subtitle {
+    text-align: center;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.w-full {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.error {
+    color: #ef4444;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.footer-link {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.footer-link a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+}

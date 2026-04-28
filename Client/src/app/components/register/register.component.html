@@ -1,0 +1,38 @@
+<div class="auth-container">
+    <div class="glass-card auth-card">
+        <h2>Create Account</h2>
+        <p class="subtitle">Join our community today</p>
+
+        <form [formGroup]="registerForm" (ngSubmit)="register()">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" formControlName="username" placeholder="johndoe">
+                <span class="error-msg" *ngIf="registerForm.get('username')?.touched && registerForm.get('username')?.hasError('required')">Username is required</span>
+                <span class="error-msg" *ngIf="registerForm.get('username')?.touched && registerForm.get('username')?.hasError('minlength')">Minimum length is 3 characters</span>
+            </div>
+
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" formControlName="email" placeholder="name@example.com">
+                <span class="error-msg" *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.hasError('required')">Email is required</span>
+                <span class="error-msg" *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.hasError('email')">Invalid email format</span>
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" formControlName="password" placeholder="••••••••">
+                <span class="error-msg" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.hasError('required')">Password is required</span>
+                <span class="error-msg" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.hasError('minlength')">Minimum length is 8 characters</span>
+                <span class="error-msg" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.hasError('passwordStrength')">Must contain at least 1 uppercase letter and 1 number</span>
+            </div>
+
+            <p class="error" *ngIf="error">{{ error }}</p>
+
+            <button type="submit" class="btn-primary w-full" [disabled]="!registerForm.valid">Sign Up</button>
+        </form>
+
+        <p class="footer-link">
+            Already have an account? <a routerLink="/login">Sign in here</a>
+        </p>
+    </div>
+</div>

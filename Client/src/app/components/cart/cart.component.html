@@ -1,0 +1,44 @@
+<div class="container slide-up">
+    <header class="cart-header">
+        <h1>Your Shopping Cart</h1>
+        <p *ngIf="cartItems.length > 0">{{ cartItems.length }} items selected</p>
+    </header>
+
+    <div *ngIf="cartItems.length === 0" class="empty-cart glass-card">
+        <p>Your cart is empty. <a routerLink="/products">Go shopping!</a></p>
+    </div>
+
+    <div *ngIf="cartItems.length > 0" class="cart-layout">
+        <div class="cart-items">
+            <div *ngFor="let item of cartItems" class="cart-item glass-card">
+                <img [src]="item.product?.imageUrl || 'https://via.placeholder.com/100'" alt="product">
+                <div class="item-details">
+                    <h3>{{ item.product?.name }}</h3>
+                    <p class="qty">Quantity: {{ item.quantity }}</p>
+                </div>
+                <div class="item-price">
+                    ${{ (item.product?.price || 0) * item.quantity | number:'1.2-2' }}
+                    <button class="remove-btn" (click)="removeItem(item.id)">Remove</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="cart-summary glass-card">
+            <h2>Summary</h2>
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span>${{ getTotalPrice() | number:'1.2-2' }}</span>
+            </div>
+            <div class="summary-row">
+                <span>Shipping</span>
+                <span class="free">FREE</span>
+            </div>
+            <hr>
+            <div class="summary-row total">
+                <span>Total</span>
+                <span>${{ getTotalPrice() | number:'1.2-2' }}</span>
+            </div>
+            <button class="btn-primary w-full shadow-lg">Checkout</button>
+        </div>
+    </div>
+</div>
