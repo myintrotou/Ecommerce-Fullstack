@@ -21,3 +21,7 @@ appsettings.Development.json
 # Database
 *.mdf
 *.ldf
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
