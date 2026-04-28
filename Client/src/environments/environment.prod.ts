@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://your-backend-service.onrender.com/api' // Replace with your actual live URL later
+  apiUrl: 'https://ecommerce-fullstack-6qyp.onrender.com/api' // Replace with your actual live URL later
 };
