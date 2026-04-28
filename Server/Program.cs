@@ -1,15 +1,19 @@
 using EcommerceAPI.Data;
 using EcommerceAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using EcommerceAPI.Repositories;
+using FluentValidation.AspNetCore;
+using EcommerceAPI.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>
 {
+    var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>() ?? new[] { "http://localhost:4200" };
     options.AddPolicy("AllowAngular",
         policy =>
         {
-            policy.AllowAnyOrigin()
+            policy.WithOrigins(allowedOrigins)
                   .AllowAnyMethod()
                   .AllowAnyHeader();
         });
@@ -21,7 +25,10 @@ builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
-    });
+    })
+    .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<ProductValidator>());
+
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -35,7 +42,7 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddAuthentication(Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -53,10 +60,16 @@ builder.Services.AddAuthentication(Microsoft.AspNetCore.Authentication.JwtBearer
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Ecommerce API V1");
+    c.RoutePrefix = string.Empty; // This makes Swagger the landing page of your API
+});
+
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    // Development specific middleware can go here
 }
 
 app.UseCors("AllowAngular");
@@ -70,31 +83,7 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<AppDbContext>();
-    SeedData(context);
+    DbSeeder.Seed(context);
 }
 
 app.Run();
-
-void SeedData(AppDbContext context)
-{
-    context.Database.EnsureCreated();
-
-    if (!context.Categories.Any())
-    {
-        var electronics = new Category { Name = "Electronics" };
-        var fashion = new Category { Name = "Fashion" };
-        context.Categories.AddRange(electronics, fashion);
-        context.SaveChanges();
-
-        if (!context.Products.Any())
-        {
-            context.Products.AddRange(
-                new Product { Name = "Ultra Pro Headphones", Description = "Noise-cancelling wireless headphones", Price = 299.99m, ImageUrl = "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500", Category = electronics, Stock = 50 },
-                new Product { Name = "Smart Watch X2", Description = "Advanced fitness tracker and smartwatch", Price = 199.50m, ImageUrl = "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500", Category = electronics, Stock = 30 },
-                new Product { Name = "Minimalist Leather Jacket", Description = "Premium vegan leather jacket", Price = 120.00m, ImageUrl = "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500", Category = fashion, Stock = 20 },
-                new Product { Name = "Canvas Sneakers", Description = "Comfortable everyday wear sneakers", Price = 45.99m, ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500", Category = fashion, Stock = 100 }
-            );
-            context.SaveChanges();
-        }
-    }
-}

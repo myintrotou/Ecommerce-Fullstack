@@ -1,5 +1,6 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using EcommerceAPI.Data;
 using EcommerceAPI.Dtos;
@@ -46,7 +47,7 @@ namespace EcommerceAPI.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login(LoginDto request)
+        public async Task<ActionResult<object>> Login(LoginDto request)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
             if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
@@ -55,7 +56,32 @@ namespace EcommerceAPI.Controllers
             }
 
             string token = CreateToken(user);
-            return Ok(token);
+            string refreshToken = GenerateRefreshToken();
+
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { Token = token, RefreshToken = refreshToken });
+        }
+
+        [HttpPost("refresh")]
+        public async Task<IActionResult> Refresh([FromBody] TokenApiModel tokenApiModel)
+        {
+            if (tokenApiModel is null || string.IsNullOrEmpty(tokenApiModel.RefreshToken)) 
+                return BadRequest("Invalid client request");
+
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.RefreshToken == tokenApiModel.RefreshToken);
+            if (user == null || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+                return BadRequest("Invalid or expired refresh token");
+
+            var newJwtToken = CreateToken(user);
+            var newRefreshToken = GenerateRefreshToken();
+
+            user.RefreshToken = newRefreshToken;
+            await _context.SaveChangesAsync();
+
+            return Ok(new { Token = newJwtToken, RefreshToken = newRefreshToken });
         }
 
         private string CreateToken(User user)
@@ -82,6 +108,14 @@ namespace EcommerceAPI.Controllers
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
             return jwt;
+        }
+
+        private string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomNumber);
+            return Convert.ToBase64String(randomNumber);
         }
     }
 }

@@ -1,19 +1,50 @@
-# Premium E-Commerce Management System
+# E-Commerce Management System
 
-A full-stack e-commerce application built with **ASP.NET Core Web API** and **Angular**. This project features a modern, high-performance architecture with a premium dark-mode UI, designed for a professional portfolio.
+A production-ready full-stack e-commerce application built with **ASP.NET Core Web API** and **Angular**. This project features a modern, high-performance architecture, designed with scalability and best practices in mind.
 
 ## 🚀 Features
-- **Modern UI:** Premium glassmorphism design using the Outfit font.
-- **JWT Authentication:** Secure login and registration using JSON Web Tokens.
-- **Reactive Cart:** Real-time shopping cart management using RxJS.
-- **Product Catalog:** Dynamic product listing with category filtering.
-- **Secure Backend:** Password hashing with BCrypt and a robust SQL Server database.
+- **Modern UI:** Premium design with Angular 19+ and RxJS.
+- **Advanced JWT Authentication:** Secure login with JSON Web Tokens and Refresh Tokens.
+- **Scalable Architecture:** Generic Repository Pattern implementation.
+- **Robust Validation:** Backend validation using FluentValidation and Reactive Forms in the Frontend.
 - **Swagger Documentation:** Interactive API documentation with JWT support.
 
 ## 🛠️ Tech Stack
-- **Frontend:** Angular 19+, CSS3 (Custom Design System), RxJS.
-- **Backend:** .NET 8, Entity Framework Core, SQL Server.
-- **Security:** JWT, BCrypt.net.
+- **Frontend:** Angular 19+, TypeScript, RxJS, HTML/CSS.
+- **Backend:** .NET 8, ASP.NET Core Web API, Entity Framework Core, C#.
+- **Database:** SQL Server.
+- **Security:** JWT Authentication, BCrypt.net.
+- **Validation:** FluentValidation (Backend), Reactive Forms (Frontend).
+
+## 🗄️ Database Schema
+
+The system uses a relational database schema optimized for e-commerce.
+
+- **Users:** Stores user credentials, hashed passwords, and refresh tokens.
+- **Products:** Contains product details, pricing, stock, and foreign key to Categories.
+- **Categories:** Represents product groupings.
+- **CartItems:** Links a User to a Product with an associated quantity.
+
+## 🏗️ Architecture Diagram
+
+```mermaid
+graph TD
+    Client[Angular Frontend] -->|HTTP / Interceptor| API[ASP.NET Core Web API]
+    
+    subgraph Backend
+        API --> Controllers[API Controllers]
+        Controllers --> FluentVal[FluentValidation]
+        Controllers --> Repository[Generic Repository]
+        Repository --> EF[Entity Framework Core]
+    end
+    
+    EF --> Database[(SQL Server)]
+    
+    subgraph Authentication
+        API --> JWT[JWT Bearer Auth]
+        JWT --> Refresh[Refresh Tokens]
+    end
+```
 
 ## 📦 Getting Started
 
@@ -23,17 +54,16 @@ A full-stack e-commerce application built with **ASP.NET Core Web API** and **An
 - SQL Server
 
 ### Backend Setup
-1. Navigate to the `Server` folder.
+1. Navigate to the `Server` folder: `cd Server`
 2. Update `appsettings.json` with your SQL Server connection string.
-3. Run `dotnet run` to start the API and seed the database.
+3. Apply Entity Framework migrations (if applicable): `dotnet ef database update`
+4. Run the API: `dotnet run` (Starts on `http://localhost:5266` or similar, depending on launchSettings.json).
 
 ### Frontend Setup
-1. Navigate to the `Client` folder.
+1. Navigate to the `Client` folder: `cd Client`
 2. Run `npm install` to install dependencies.
-3. Run `ng serve` and open `http://localhost:4200`.
-
-## 📸 Screenshots
-![alt text](image.png)
+3. Run `ng serve` to launch the Angular development server.
+4. Open `http://localhost:4200` in your browser.
 
 ## 📄 License
 This project is licensed under the MIT License.

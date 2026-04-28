@@ -1,0 +1,9 @@
+bin/
+obj/
+Migrations/
+.vs/
+.vscode/
+*.db
+*.db-journal
+*.db-wal
+appsettings.Development.json

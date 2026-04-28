@@ -1,4 +1,4 @@
-﻿namespace EcommerceAPI.Models
+namespace EcommerceAPI.Models
 {
     public class User
     {
@@ -7,5 +7,7 @@
         public string Email { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty; // Never store plain passwords!
         public string Role { get; set; } = "Customer"; // "Admin" or "Customer"
+        public string? RefreshToken { get; set; }
+        public DateTime RefreshTokenExpiryTime { get; set; }
     }
 }
