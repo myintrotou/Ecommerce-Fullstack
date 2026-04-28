@@ -12,12 +12,17 @@ import { Router } from '@angular/router';
 export class RegisterComponent implements OnInit {
   registerForm!: FormGroup;
   error = '';
+  showPassword = false;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService, 
     private router: Router
   ) { }
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
 
   ngOnInit() {
     this.registerForm = this.fb.group({

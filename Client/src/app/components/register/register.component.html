@@ -20,7 +20,12 @@
 
             <div class="form-group">
                 <label>Password</label>
-                <input type="password" formControlName="password" placeholder="••••••••">
+                <div class="password-wrapper">
+                  <input [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="••••••••">
+                  <button type="button" class="toggle-btn" (click)="togglePassword()">
+                    {{ showPassword ? '👁️' : '🔒' }}
+                  </button>
+                </div>
                 <span class="error-msg" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.hasError('required')">Password is required</span>
                 <span class="error-msg" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.hasError('minlength')">Minimum length is 8 characters</span>
                 <span class="error-msg" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.hasError('passwordStrength')">Must contain at least 1 uppercase letter and 1 number</span>
